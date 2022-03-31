@@ -1,5 +1,6 @@
 ﻿global using FluentValidation;
 global using MediatR;
+global using Mortoff.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mortoff.Common;
