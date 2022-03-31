@@ -9,7 +9,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>		
-		<PackageReference Include="FluentValidation" Version="10.4.0" />		
+		<PackageReference Include="FluentValidation" Version="10.4.0" />
+		<PackageReference Include="AutoMapper" Version="11.0.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="MediatR" Version="10.0.1" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Application.Interfaces\Application.Interfaces.csproj" />
+	  <ProjectReference Include="..\Common\Common.csproj" />
 	</ItemGroup>
 	
 </Project>

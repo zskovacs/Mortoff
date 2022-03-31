@@ -4,6 +4,7 @@ using Mortoff.Application.Common.Exceptions;
 using Mortoff.Common;
 using Mortoff.Persistence;
 using Mortoff.WebUI.Filters;
+using Mortoff.WebUI.Middlewares;
 using Newtonsoft.Json;
 
 namespace Mortoff.WebUI;
@@ -44,8 +45,12 @@ public class Startup
             options.SuppressModelStateInvalidFilter = true);
 
         services.AddSpaStaticFiles(configuration =>
-            configuration.RootPath = "ClientApp/dist"
-        );
+            configuration.RootPath = "ClientApp/dist");
+
+        services.AddOpenApiDocument(configure =>
+        {
+            configure.Title = "Mortoff API";
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -61,6 +66,7 @@ public class Startup
             app.UseHsts();
         }
 
+        app.UseCustomExceptionHandler();
         app.UseHealthChecks("/health");
         app.UseHttpsRedirection();
         app.UseStaticFiles();
@@ -78,15 +84,12 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseCors("CorsPolicy");
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller}/{action=Index}/{id?}");
             endpoints.MapControllers();
-
         });
 
         app.UseSpa(spa =>
