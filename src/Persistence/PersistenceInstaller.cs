@@ -14,5 +14,7 @@ public class PersistenceInstaller : IInstaller
             options.UseSqlServer(defaultConnectionString));
 
         services.AddScoped<IAppdDbContext>(provider => provider.GetService<AppDbContext>());
+
+        services.AddScoped<ISqlConnectionFactory>(_ => new SqlConnectionFactory(defaultConnectionString));
     }
 }
