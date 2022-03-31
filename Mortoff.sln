@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mortoff", "Mortoff\Mortoff.csproj", "{A3C25A24-7161-4FB7-A1E8-F041988C397B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3C25A24-7161-4FB7-A1E8-F041988C397B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3C25A24-7161-4FB7-A1E8-F041988C397B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3C25A24-7161-4FB7-A1E8-F041988C397B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3C25A24-7161-4FB7-A1E8-F041988C397B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9533247E-7032-4B09-9AD8-3A1A4E2F2386}
+	EndGlobalSection
+EndGlobal
