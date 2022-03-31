@@ -3,14 +3,9 @@ global using MediatR;
 global using Mortoff.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Mortoff.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Mortoff.Application.Common.Behaviours;
+using Mortoff.Common;
+using System.Reflection;
 
 namespace Mortoff.Application;
 public class ApplicationInstaller : IInstaller

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using Mortoff.Application.Interfaces;
-using System;
 using System.Data;
 
 namespace Mortoff.Persistence;

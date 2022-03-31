@@ -1,6 +1,4 @@
 ﻿using FluentValidation.Results;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mortoff.Application.Common.Exceptions;
 public class ValidationException : Exception

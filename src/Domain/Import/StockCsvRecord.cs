@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mortoff.Domain.Import;
+﻿namespace Mortoff.Domain.Import;
 public class StockCsvRecord
 {
     public DateTime Date { get; set; }

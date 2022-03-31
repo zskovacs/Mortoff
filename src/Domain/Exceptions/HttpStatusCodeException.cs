@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
 namespace Mortoff.Domain.Exceptions;
 public class HttpStatusCodeException : Exception

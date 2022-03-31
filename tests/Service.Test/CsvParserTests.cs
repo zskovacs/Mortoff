@@ -7,24 +7,20 @@ using Mortoff.Application.Interfaces;
 using Mortoff.Domain.Import;
 using Mortoff.Service.Import;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Mortoff.Service.Test;
 
 [TestClass]
 public class CsvParserTests : TestBase
 {
-    private IFileParser<StockCsvRecord> service; 
+    private IFileParser<StockCsvRecord> service;
 
     [TestInitialize]
     public void Setup()
     {
         var logger = Substitute.For<ILogger<CsvFileParser<StockCsvRecord>>>();
-        
+
         service = Substitute.ForPartsOf<CsvFileParser<StockCsvRecord>>(logger);
     }
 

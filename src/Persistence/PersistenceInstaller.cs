@@ -1,8 +1,8 @@
-﻿using Mortoff.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mortoff.Application.Interfaces;
+using Mortoff.Common;
 
 namespace Mortoff.Persistence;
 public class PersistenceInstaller : IInstaller

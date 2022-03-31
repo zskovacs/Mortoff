@@ -1,9 +1,9 @@
-﻿using Mortoff.Application.Interfaces;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
-using System.Globalization;
 using Microsoft.Extensions.Logging;
+using Mortoff.Application.Interfaces;
+using System.Globalization;
 
 namespace Mortoff.Service.Import;
 public class CsvFileParser<T> : IFileParser<T>
@@ -27,7 +27,7 @@ public class CsvFileParser<T> : IFileParser<T>
             BadDataFound = context =>
                 _logger.LogWarning($"Bad data found at row {context.Field}\r\n" +
                          $"Raw data: {context.RawRecord}"),
-            MissingFieldFound = context =>                        
+            MissingFieldFound = context =>
                 _logger.LogWarning($"Missing Field Found at line {context.Index}\r\n" +
                          $"Field at index {context.Index} does not exist\r\n" +
                          $"Raw record: {context.Context}"),

@@ -4,11 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Mortoff.Application.Common.Validators;
 using Mortoff.Domain.Entities;
 using Mortoff.Domain.Import;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mortoff.Application.Stock.Commands;
 public record UploadStockDataCommand(IFormFile File, string StockName) : IRequest;

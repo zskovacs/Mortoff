@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mortoff.Application.Common.Validators;
+﻿namespace Mortoff.Application.Common.Validators;
 internal class StockNameValidator : AbstractValidator<string>
 {
     public StockNameValidator()

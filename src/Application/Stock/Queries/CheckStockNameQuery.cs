@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mortoff.Application.Common.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mortoff.Application.Stock.Queries;
 public record CheckStockNameQuery(string Name) : IRequest<bool>;
