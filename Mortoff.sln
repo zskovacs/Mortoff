@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{D7F17EC7-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{FD4CFF2B-5E79-4606-8A6A-EF3D89F86CA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{14BB3EEF-C406-4167-B4AE-1BA8DD7A985A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{14BB3EEF-C406-4167-B4AE-1BA8DD7A985A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Interfaces", "src\Application.Interfaces\Application.Interfaces.csproj", "{816B1F8D-7142-44FA-A751-7F40F28FDD7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Interfaces", "src\Application.Interfaces\Application.Interfaces.csproj", "{816B1F8D-7142-44FA-A751-7F40F28FDD7B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "settings", "settings", "{FC9A6290-85FD-4565-8121-ACC87AF19E7C}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,11 +28,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "settings", "settings", "{FC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{D4163942-30AB-4B9D-AEDB-B9840032A508}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "src\Service\Service.csproj", "{5F4D93D0-C850-416C-B743-7AA7C9C969F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "src\Service\Service.csproj", "{5F4D93D0-C850-416C-B743-7AA7C9C969F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{8B782355-89D4-4201-A3EE-64ED9A513DC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\Common\Common.csproj", "{8B782355-89D4-4201-A3EE-64ED9A513DC2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "src\Persistence\Persistence.csproj", "{888CD8B2-8665-496E-9F6F-EFCE8A4B69D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7C5A55F0-19AE-4DBC-83CE-5A4839A2FB6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Test", "tests\Service.Test\Service.Test.csproj", "{D407B275-366A-44CC-8E10-893BD1776AB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,10 @@ Global
 		{888CD8B2-8665-496E-9F6F-EFCE8A4B69D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{888CD8B2-8665-496E-9F6F-EFCE8A4B69D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{888CD8B2-8665-496E-9F6F-EFCE8A4B69D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D407B275-366A-44CC-8E10-893BD1776AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D407B275-366A-44CC-8E10-893BD1776AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D407B275-366A-44CC-8E10-893BD1776AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D407B275-366A-44CC-8E10-893BD1776AB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +91,7 @@ Global
 		{5F4D93D0-C850-416C-B743-7AA7C9C969F2} = {FD4CFF2B-5E79-4606-8A6A-EF3D89F86CA5}
 		{8B782355-89D4-4201-A3EE-64ED9A513DC2} = {D7F17EC7-D47F-4D63-AC72-C8DC56586E58}
 		{888CD8B2-8665-496E-9F6F-EFCE8A4B69D9} = {FD4CFF2B-5E79-4606-8A6A-EF3D89F86CA5}
+		{D407B275-366A-44CC-8E10-893BD1776AB5} = {7C5A55F0-19AE-4DBC-83CE-5A4839A2FB6B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9533247E-7032-4B09-9AD8-3A1A4E2F2386}

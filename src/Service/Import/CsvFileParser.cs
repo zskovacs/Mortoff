@@ -6,7 +6,7 @@ using System.Globalization;
 using Microsoft.Extensions.Logging;
 
 namespace Mortoff.Service.Import;
-internal class CsvFileParser<T> : IFileParser<T>
+public class CsvFileParser<T> : IFileParser<T>
 {
     private readonly ILogger _logger;
 
