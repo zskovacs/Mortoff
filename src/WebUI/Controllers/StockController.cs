@@ -14,7 +14,7 @@ public class StockController : BaseController
     [Route("upload-stock-data")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UploadStockData([FromForm] UploadStockDataCommand request)
+    public async Task<IActionResult> UploadStockData([FromForm] StockUploadDataCommand request)
     {
         var response = await Send(request);
         return Ok(response);
@@ -34,7 +34,7 @@ public class StockController : BaseController
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     public async Task<IActionResult> CheckStock(string name)
     {
-        var response = await Send(new CheckStockNameQuery(name));
+        var response = await Send(new StockCheckNameQuery(name));
         return Ok(response);
     }
 

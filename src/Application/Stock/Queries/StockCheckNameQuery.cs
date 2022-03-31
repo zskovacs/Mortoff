@@ -2,9 +2,9 @@
 using Mortoff.Application.Common.Validators;
 
 namespace Mortoff.Application.Stock.Queries;
-public record CheckStockNameQuery(string Name) : IRequest<bool>;
+public record StockCheckNameQuery(string Name) : IRequest<bool>;
 
-internal class CheckStockNameQueryHandler : IRequestHandler<CheckStockNameQuery, bool>
+internal class CheckStockNameQueryHandler : IRequestHandler<StockCheckNameQuery, bool>
 {
     private readonly IAppdDbContext _dbContext;
 
@@ -13,10 +13,10 @@ internal class CheckStockNameQueryHandler : IRequestHandler<CheckStockNameQuery,
         _dbContext = dbContext;
     }
 
-    public Task<bool> Handle(CheckStockNameQuery request, CancellationToken cancellationToken) => _dbContext.Stocks.AnyAsync(x => x.Name == request.Name, cancellationToken);
+    public Task<bool> Handle(StockCheckNameQuery request, CancellationToken cancellationToken) => _dbContext.Stocks.AnyAsync(x => x.Name == request.Name, cancellationToken);
 }
 
-internal class CheckStockNameQueryValidator : AbstractValidator<CheckStockNameQuery>
+internal class CheckStockNameQueryValidator : AbstractValidator<StockCheckNameQuery>
 {
     public CheckStockNameQueryValidator()
     {

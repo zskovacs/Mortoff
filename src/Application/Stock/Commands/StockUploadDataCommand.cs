@@ -6,9 +6,9 @@ using Mortoff.Domain.Entities;
 using Mortoff.Domain.Import;
 
 namespace Mortoff.Application.Stock.Commands;
-public record UploadStockDataCommand(IFormFile File, string StockName) : IRequest;
+public record StockUploadDataCommand(IFormFile File, string StockName) : IRequest;
 
-internal class UploadStockDataCommandHandler : IRequestHandler<UploadStockDataCommand>
+internal class UploadStockDataCommandHandler : IRequestHandler<StockUploadDataCommand>
 {
     private readonly IAppdDbContext _dbContext;
     private readonly IFileParser<StockCsvRecord> _csvParser;
@@ -21,7 +21,7 @@ internal class UploadStockDataCommandHandler : IRequestHandler<UploadStockDataCo
         _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(UploadStockDataCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(StockUploadDataCommand request, CancellationToken cancellationToken)
     {
         var records = _csvParser.ParseFile(request.File);
 
@@ -42,7 +42,7 @@ internal class UploadStockDataCommandHandler : IRequestHandler<UploadStockDataCo
     }
 }
 
-internal class UploadStockDataCommandValidator : AbstractValidator<UploadStockDataCommand>
+internal class UploadStockDataCommandValidator : AbstractValidator<StockUploadDataCommand>
 {
     public UploadStockDataCommandValidator()
     {
