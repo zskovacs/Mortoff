@@ -51,10 +51,8 @@ internal class UploadStockDataCommandValidator : AbstractValidator<UploadStockDa
 {
     public UploadStockDataCommandValidator()
     {
-        RuleFor(x => x.StockName)
-            .MaximumLength(40).WithMessage(x => $"Részvény neve nem hosszabb-e mint 40 karakter. Amit megadtál {x.StockName.Length} hosszú")
-            .Matches(@"^[A-Za-z0-9\s]*$").WithMessage("A részvény neve csak az angol ABC betűit, szóközt és számokat tartalmazhat");
-        
+        RuleFor(x => x.StockName).SetValidator(new StockNameValidator());
+
         RuleFor(x => x.File)
             .NotNull().WithMessage("Nem található a feltöltött file")
             .SetValidator(new FileValidator(2048000, new List<string> { "text/csv", "application/vnd.ms-excel" }));

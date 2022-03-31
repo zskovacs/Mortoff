@@ -16,7 +16,10 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IStockClient {
-    uploadAvatar(file: FileParameter | null | undefined, stockName: string | null | undefined): Observable<string>;
+    uploadStockData(file: FileParameter | null | undefined, stockName: string | null | undefined): Observable<string>;
+    getHistory(name: string | null, from: Date, to: Date): Observable<StockDataViewModel[]>;
+    checkStock(name: string | null): Observable<boolean>;
+    listStocks(): Observable<StockListViewModel[]>;
 }
 
 @Injectable()
@@ -30,7 +33,7 @@ export class StockClient implements IStockClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    uploadAvatar(file: FileParameter | null | undefined, stockName: string | null | undefined): Observable<string> {
+    uploadStockData(file: FileParameter | null | undefined, stockName: string | null | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/stock/upload-stock-data";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -50,11 +53,11 @@ export class StockClient implements IStockClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUploadAvatar(response_);
+            return this.processUploadStockData(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUploadAvatar(response_ as any);
+                    return this.processUploadStockData(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<string>;
                 }
@@ -63,7 +66,7 @@ export class StockClient implements IStockClient {
         }));
     }
 
-    protected processUploadAvatar(response: HttpResponseBase): Observable<string> {
+    protected processUploadStockData(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -84,6 +87,180 @@ export class StockClient implements IStockClient {
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result400 = ErrorResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getHistory(name: string | null, from: Date, to: Date): Observable<StockDataViewModel[]> {
+        let url_ = this.baseUrl + "/api/stock/get-stock-history?";
+        if (name === undefined)
+            throw new Error("The parameter 'name' must be defined.");
+        else if(name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (from === undefined || from === null)
+            throw new Error("The parameter 'from' must be defined and cannot be null.");
+        else
+            url_ += "From=" + encodeURIComponent(from ? "" + from.toISOString() : "") + "&";
+        if (to === undefined || to === null)
+            throw new Error("The parameter 'to' must be defined and cannot be null.");
+        else
+            url_ += "To=" + encodeURIComponent(to ? "" + to.toISOString() : "") + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHistory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StockDataViewModel[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StockDataViewModel[]>;
+        }));
+    }
+
+    protected processGetHistory(response: HttpResponseBase): Observable<StockDataViewModel[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(StockDataViewModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    checkStock(name: string | null): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/stock/check-stock-exist/{name}";
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckStock(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckStock(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
+    }
+
+    protected processCheckStock(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    listStocks(): Observable<StockListViewModel[]> {
+        let url_ = this.baseUrl + "/api/stock/list-available-stocks";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListStocks(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListStocks(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StockListViewModel[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StockListViewModel[]>;
+        }));
+    }
+
+    protected processListStocks(response: HttpResponseBase): Observable<StockListViewModel[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(StockListViewModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -261,6 +438,106 @@ export class ErrorResponse implements IErrorResponse {
 export interface IErrorResponse {
     error?: string;
     details?: any;
+}
+
+export class StockDataViewModel implements IStockDataViewModel {
+    date?: Date;
+    open?: number;
+    high?: number;
+    low?: number;
+    close?: number;
+    volume?: number;
+
+    constructor(data?: IStockDataViewModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.open = _data["open"];
+            this.high = _data["high"];
+            this.low = _data["low"];
+            this.close = _data["close"];
+            this.volume = _data["volume"];
+        }
+    }
+
+    static fromJS(data: any): StockDataViewModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StockDataViewModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["open"] = this.open;
+        data["high"] = this.high;
+        data["low"] = this.low;
+        data["close"] = this.close;
+        data["volume"] = this.volume;
+        return data;
+    }
+}
+
+export interface IStockDataViewModel {
+    date?: Date;
+    open?: number;
+    high?: number;
+    low?: number;
+    close?: number;
+    volume?: number;
+}
+
+export class StockListViewModel implements IStockListViewModel {
+    name?: string;
+    from?: Date;
+    to?: Date;
+
+    constructor(data?: IStockListViewModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
+            this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): StockListViewModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StockListViewModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["from"] = this.from ? this.from.toISOString() : <any>undefined;
+        data["to"] = this.to ? this.to.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IStockListViewModel {
+    name?: string;
+    from?: Date;
+    to?: Date;
 }
 
 export interface FileParameter {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Mortoff.Application.Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ internal class CheckStockNameQueryHandler : IRequestHandler<CheckStockNameQuery,
     {
         _dbContext = dbContext;
     }
+
     public Task<bool> Handle(CheckStockNameQuery request, CancellationToken cancellationToken) => _dbContext.Stocks.AnyAsync(x => x.Name == request.Name, cancellationToken);
 }
 
@@ -23,8 +25,6 @@ internal class CheckStockNameQueryValidator : AbstractValidator<CheckStockNameQu
 {
     public CheckStockNameQueryValidator()
     {
-        RuleFor(x => x.Name)
-            .MaximumLength(40).WithMessage(x => $"Részvény neve nem hosszabb-e mint 40 karakter. Amit megadtál {x.Name.Length} hosszú")
-            .Matches(@"^[A-Za-z0-9\s]*$").WithMessage("A részvény neve csak az angol ABC betűit, szóközt és számokat tartalmazhat");
+        RuleFor(x => x.Name).SetValidator(new StockNameValidator());
     }
 }

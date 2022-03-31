@@ -11,7 +11,7 @@
         "tags": [
           "Stock"
         ],
-        "operationId": "Stock_UploadAvatar",
+        "operationId": "Stock_UploadStockData",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -49,6 +49,116 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stock/get-stock-history": {
+      "get": {
+        "tags": [
+          "Stock"
+        ],
+        "operationId": "Stock_GetHistory",
+        "parameters": [
+          {
+            "name": "Name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "From",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "To",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StockDataViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stock/check-stock-exist/{name}": {
+      "get": {
+        "tags": [
+          "Stock"
+        ],
+        "operationId": "Stock_CheckStock",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stock/list-available-stocks": {
+      "get": {
+        "tags": [
+          "Stock"
+        ],
+        "operationId": "Stock_ListStocks",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StockListViewModel"
+                  }
                 }
               }
             }
@@ -127,6 +237,53 @@
             "type": "string"
           },
           "details": {}
+        }
+      },
+      "StockDataViewModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "open": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "high": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "low": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "close": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "StockListViewModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       }
     }
