@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "settings", "settings", "{FC
 		.gitignore = .gitignore
 		common.props = common.props
 		global.json = global.json
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{D4163942-30AB-4B9D-AEDB-B9840032A508}"
@@ -36,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "src\Persiste
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7C5A55F0-19AE-4DBC-83CE-5A4839A2FB6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Test", "tests\Service.Test\Service.Test.csproj", "{D407B275-366A-44CC-8E10-893BD1776AB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Test", "tests\Service.Test\Service.Test.csproj", "{D407B275-366A-44CC-8E10-893BD1776AB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
