@@ -50,6 +50,6 @@ internal class UploadStockDataCommandValidator : AbstractValidator<StockUploadDa
 
         RuleFor(x => x.File)
             .NotNull().WithMessage("Nem található a feltöltött file")
-            .SetValidator(new FileValidator(2048000, new List<string> { "text/csv", "application/vnd.ms-excel" }));
+            .SetValidator(new FileValidator(1024000, new List<string> { "text/csv", "application/vnd.ms-excel" }));
     }
 }
