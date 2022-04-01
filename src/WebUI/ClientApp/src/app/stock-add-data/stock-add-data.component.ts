@@ -12,9 +12,12 @@ import { AlertModalContentComponent } from '../../shared/alert-modal/alert-modal
 })
 export class StockAddDataComponent implements OnInit {
   @ViewChild('alertBox') alertBox: ElementRef;
+  public modalRef?: BsModalRef;
+  public mainForm: FormGroup;
+  public showAlert: boolean;
+  public showSuccess: boolean;
 
-  constructor(private _formBuilder: FormBuilder, private cd: ChangeDetectorRef, private _stockClient: StockClient, private _modalService: BsModalService) {
-
+  constructor(private _formBuilder: FormBuilder, private _cd: ChangeDetectorRef, private _stockClient: StockClient, private _modalService: BsModalService) {
     const allowedExtensions = ['csv', 'xls'];
 
     this.mainForm = this._formBuilder.group({
@@ -23,35 +26,47 @@ export class StockAddDataComponent implements OnInit {
     });
   }
 
-
-  modalRef?: BsModalRef;
-  mainForm: FormGroup;
-  showAlert: boolean;
-  showSuccess: boolean;
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
 
   ngOnInit(): void {
     this.showAlert = false;
   }
 
-  onFileChange($event: any) {
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+  * Ha kiválasztja a filet akkor ez az esemény fogja beállítani a reactive formba az objektumot
+  */
+  public onFileChange($event: any) {
     if ($event.target.files.length > 0) {
       this.mainForm.patchValue({
         file: $event.target.files[0]
       });
-      this.cd.markForCheck();
+
+      // Ez azért kell, mert amúgy out-of-scope vagyunk így nem figyeli a CD a változásokat
+      this._cd.markForCheck();
     }
   }
 
-  submit() {
+  /**
+   * Feltöltés gomb
+   */
+  public submit() {
 
     this.mainForm.disable();
     const me = this;
 
+    // először ellenőrizzük, hogy van-e már ilyen stock a rendszerben
     this._stockClient.checkStock(this.mainForm.get('name')?.value).subscribe({
       next: (value: boolean) => {
+        // ha van, akkor egy confirmation ablakkal elfogadtatjuk, hogy felül legyen-e írva
         if (value)
           this.modalRef = this._modalService.show(this.alertBox as any);
-      },      
+      },
       error: (e: ErrorResponse) => {
         this.mainForm.enable();
         me.showAlert = true;
@@ -62,16 +77,29 @@ export class StockAddDataComponent implements OnInit {
     });
   }
 
-  confirm(): void {
+  /**
+   * Confirmation dialog: confirm
+   */
+  public confirm(): void {
     this.save();
     this.modalRef?.hide();
   }
 
-  decline(): void {
+  /**
+   * Confirmation dialog: decline
+   */
+  public decline(): void {
     this.mainForm.enable();
     this.modalRef?.hide();
   }
 
+  // -----------------------------------------------------------------------------------------------------
+  // @ Private methods
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * Ha nincs még ilyen stock, vagy felülírja a felhasználó, akkor elmenjtük a DB-be
+   */
   private save(): void {
     const me = this;
 

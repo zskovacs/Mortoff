@@ -29,12 +29,19 @@ export class StockGetDataComponent implements OnInit {
 
   }
 
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
+
   ngOnInit(): void {
+    // inicialiázljuk a chart adatokat
     this.loadChart();
+
     this._stockClient.listStocks().subscribe({
       next: (value) => {
         this.stocks = value;
         if (value.length > 0) {
+          // ha van elérhető stock, akkor az elsőt autómatikusan kiválasztjuk
           this.selectedStock = this.stocks[0];
           this.initData();
         }
@@ -42,10 +49,31 @@ export class StockGetDataComponent implements OnInit {
     });
   }
 
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
+
   public onStockChange($event: any): void {
     this.selectedStock = this.stocks.filter(x => x.id == $event.target.value)[0];
-
     this.initData();
+  }
+
+  public selectDate(dateRange: DateRanges): void {
+    var originalSelected = this.dateRanges.find(x => x.selected);
+
+    if (originalSelected) {
+      originalSelected.selected = false;
+    }
+
+    var newSelected = this.dateRanges.find(x => x == dateRange);
+    if (newSelected) {
+      newSelected.selected = true;
+
+      this.loadHistory(newSelected.from, newSelected.to);
+    }
+
+    // beállítjuk a cachebe
+    localStorage.setItem(this.selectedStock.id.toString(), JSON.stringify(dateRange));
   }
 
   private populateDateRanges(): void {
@@ -57,31 +85,23 @@ export class StockGetDataComponent implements OnInit {
       this.dateRanges.push({ from: first.toDate(), to: first.add(3, "months").toDate(), selected: false })
     }
 
+    // Cacheből lekérjük, hogy van-e már mentett dátum
     let cachedDate = JSON.parse(localStorage.getItem(this.selectedStock.id.toString()));
     if (cachedDate) {
-      var c = this.dateRanges.find(x => moment(x.from).isSame(cachedDate.from, "day"))
-      if (c)
-        c.selected = true;
+      // ha van akkor kikeressük, hogy a most betöltöttek között van-e ilyen dátum
+      var isInRange = this.dateRanges.find(x => moment(x.from).isSame(cachedDate.from, "day"))
+      // ha ez is van, akkor beállítjuk kiválasztottnak
+      if (isInRange)
+        isInRange.selected = true;
+      // ha nincs akkor az első elemet betöltjük a tömbből
     } else if (this.dateRanges[0]) {
       this.dateRanges[0].selected = true;
     }
   }
 
-  public selectDate(dateRange: DateRanges): void {
-    var old = this.dateRanges.find(x => x.selected);
-
-    if (old) {
-      old.selected = false;
-    }
-
-    var _new = this.dateRanges.find(x => x == dateRange);
-    if (_new) {
-      _new.selected = true;
-      this.loadHistory(_new.from, _new.to);
-    }
-
-    localStorage.setItem(this.selectedStock.id.toString(), JSON.stringify(dateRange));
-  }
+  // -----------------------------------------------------------------------------------------------------
+  // @ Private methods
+  // -----------------------------------------------------------------------------------------------------
 
   private initData(): void {
     let cachedDate = JSON.parse(localStorage.getItem(this.selectedStock.id.toString()));
