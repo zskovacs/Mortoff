@@ -14,7 +14,7 @@ export class StockAddDataComponent implements OnInit {
     const allowedExtensions = ['csv', 'xls'];
 
     this.mainForm = this._formBuilder.group({
-      name: ['', [Validators.required, Validators.maxLength(40)]],
+      name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern('^[A-Za-z0-9 ]*$')]],
       file: [null, [Validators.required, FileValidator.fileMaxSize(1024000), FileValidator.fileExtensions(allowedExtensions)]]
     });
   }

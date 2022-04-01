@@ -31,6 +31,8 @@
           <div *ngIf="mainForm.touched && mainForm.invalid" class="text-danger">
             <div *ngIf="mainForm.get('name')?.hasError('required')">Kötelező nevet megadni.</div>
             <div *ngIf="mainForm.get('name')?.hasError('maxlength')">A részvény neve maximum 40 karakter lehet.</div>
+            <div *ngIf="mainForm.get('name')?.hasError('pattern')">A részvény neve csak az angol ABC kis és nagybetűit tartalmazhatja illetve szóközöket és számokat.</div>
+            
           </div>
 
           <small id="stockNameHelp" class="form-text text-muted">Pl: NIO</small>
