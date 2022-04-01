@@ -28,7 +28,12 @@
         </select>
       </div>
     </div>
-    <div class="col-12 mt-5" id="chart" *ngIf="selectedStock">
+    <div class="text-center mt-5" *ngIf="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div class="col-12 mt-5" id="chart" *ngIf="selectedStock && !loading">
 
 
       <h1>{{selectedStock.name}}</h1>

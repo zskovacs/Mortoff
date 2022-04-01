@@ -23,6 +23,7 @@ export class StockGetDataComponent implements OnInit {
   public stockData: ChartData[] = [];
   public selectedStock: StockListViewModel;
   public dateRanges: DateRanges[] = [];
+  public loading: boolean;
 
   constructor(private _stockClient: StockClient) {
 
@@ -98,10 +99,12 @@ export class StockGetDataComponent implements OnInit {
   }
 
   private loadHistory(from: Date, to: Date): void {
+    this.loading = true;
     this._stockClient.getHistory(this.selectedStock.id as number, from, to).subscribe({
       next: (value) => {
         this.stockData = value.map(x => this.mapDataToChart(x));
         this.loadChart();
+        this.loading = false;
       }
     });
   }

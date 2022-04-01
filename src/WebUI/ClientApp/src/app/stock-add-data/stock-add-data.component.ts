@@ -27,6 +27,7 @@ export class StockAddDataComponent implements OnInit {
   modalRef?: BsModalRef;
   mainForm: FormGroup;
   showAlert: boolean;
+  showSuccess: boolean;
 
   ngOnInit(): void {
     this.showAlert = false;
@@ -50,8 +51,6 @@ export class StockAddDataComponent implements OnInit {
       next: (value: boolean) => {
         if (value)
           this.modalRef = this._modalService.show(this.alertBox as any);
-
-        this.save();
       },      
       error: (e: ErrorResponse) => {
         this.mainForm.enable();
@@ -80,6 +79,10 @@ export class StockAddDataComponent implements OnInit {
     this._stockClient.uploadStockData(file, this.mainForm.get('name')?.value).subscribe({
       complete: () => {
         this.mainForm.enable();
+        me.showSuccess = true;
+        setTimeout(function () {
+          me.showSuccess = false;
+        }, 3000);
       },
       error: (e: ErrorResponse) => {
         this.mainForm.enable();

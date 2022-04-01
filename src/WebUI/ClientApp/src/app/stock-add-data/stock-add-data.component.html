@@ -24,6 +24,9 @@
     <alert type="danger" *ngIf="showAlert">
       <strong>Hiba történt</strong> Próbáld meg később újra elküldeni.
     </alert>
+    <alert type="success" *ngIf="showSuccess">
+      <strong>Sikeres feltöltés!  </strong>  <a [routerLink]="'/stock-get'" class="alert-link">Ezen</a> a linken megtekintheted az adatokat.
+    </alert>
     <div class="col-12">
       <form [formGroup]="mainForm" (ngSubmit)="submit()">
         <div class="form-group">
