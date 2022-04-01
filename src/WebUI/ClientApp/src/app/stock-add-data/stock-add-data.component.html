@@ -1,8 +1,51 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb bg-light p-3">
+<nav aria-label="breadcrumb" class="bg-light py-2">
+  
+  <ol class="container breadcrumb">
     <li class="breadcrumb-item"><a [routerLink]="'/stocks'">Főoldal</a></li>
     <li class="breadcrumb-item active" aria-current="page">CSV feltöltése</li>
   </ol>
 </nav>
 
-<p>stock-add-data works!</p>
+<section class="container">
+  <div class="row py-lg-5">
+
+    <div class="col">
+      <h1 class="fw-light">Részvény adatok feltöltése</h1>
+      <p class="lead text-muted">Ezen a felületen a részvény nevének megadásával és a hozzá tartozó CSV állomány kiválsztásával tudjuk beimportálni egy adott részvény adatait</p>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="col">
+      <h3 class="fw-light">Áttekintés</h3>
+      <p class="lead text-muted">Kérjük, adja meg a részvény nevét, legfeljebb 40 karakterben (angol ABC kis- és nagybetűi, szóköz és számok használható), majd válassza ki azt a CSV állományt, amely a részvény árfolyamának változásait tartalmazza.</p>
+      <p class="lead text-muted">A feltöltés gombra kattintva az adatok betöltődnek az adatbázisba.</p>
+    </div>
+
+    <div class="col-12">
+      <form [formGroup]="mainForm" (ngSubmit)="submit()">
+        <div class="form-group">
+          <label for="stockName">Részvény megnevezése</label>
+          <input type="text" class="form-control" id="stockName" aria-describedby="stockNameHelp" placeholder="Részvény neve" formControlName="name" required>
+
+          <div *ngIf="mainForm.touched && mainForm.invalid" class="text-danger">
+            <div *ngIf="mainForm.get('name')?.hasError('required')">Kötelező nevet megadni.</div>
+            <div *ngIf="mainForm.get('name')?.hasError('maxlength')">A részvény neve maximum 40 karakter lehet.</div>
+          </div>
+
+          <small id="stockNameHelp" class="form-text text-muted">Pl: NIO</small>
+        </div>
+        <div class="form-group mt-3">
+          <label for="fileUpload">CSV állomány</label>
+          <input type="file" class="form-control" id="fileUpload" (change)="onFileChange($event)">
+          <div *ngIf="mainForm.touched && mainForm.invalid" class="text-danger">
+            <div *ngIf="mainForm.get('file')?.hasError('fileExtension')">Csak CSV filet lehet megadni.</div>
+            <div *ngIf="mainForm.get('file')?.hasError('fileMaxSize')">A maximális mérete a filenak 1 MB</div>
+          </div>
+          <small id="fileUploadHelp" class="form-text text-muted">A feltöltött állomány mérete 1MB-nál kisebb kell, hogy legyen!</small>
+        </div>        
+        <button type="submit" class="btn btn-primary mt-3" [disabled]="mainForm.invalid">Feltöltés</button>
+      </form>
+    </div>
+  </div>
+</section>
