@@ -64,8 +64,11 @@ export class StockAddDataComponent implements OnInit {
     this._stockClient.checkStock(this.mainForm.get('name')?.value).subscribe({
       next: (value: boolean) => {
         // ha van, akkor egy confirmation ablakkal elfogadtatjuk, hogy felül legyen-e írva
-        if (value)
+        if (value) {
           this.modalRef = this._modalService.show(this.alertBox as any);
+        } else {
+          this.save();
+        }
       },
       error: (e: ErrorResponse) => {
         this.mainForm.enable();
