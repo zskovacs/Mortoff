@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mortoff.Application.Interfaces;
+using Mortoff.Domain.Exceptions;
 using System.Globalization;
 
 namespace Mortoff.Service.Import;
@@ -21,9 +22,6 @@ public class CsvFileParser<T> : IFileParser<T>
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
-
-
-
             BadDataFound = context =>
                 _logger.LogWarning($"Bad data found at row {context.Field}\r\n" +
                          $"Raw data: {context.RawRecord}"),
@@ -37,6 +35,17 @@ public class CsvFileParser<T> : IFileParser<T>
         using var stream = file.OpenReadStream();
         using var reader = new StreamReader(stream);
         using var csv = new CsvReader(reader, config);
+
+        csv.Read();
+        csv.ReadHeader();
+        try
+        {
+            csv.ValidateHeader<T>();
+        }
+        catch (HeaderValidationException e)
+        {
+            throw new BadRequestException($"Hiányzó header: {string.Join(",", e.InvalidHeaders.SelectMany(x => x.Names))}");
+        }
 
         return csv.GetRecords<T>().ToList();
     }

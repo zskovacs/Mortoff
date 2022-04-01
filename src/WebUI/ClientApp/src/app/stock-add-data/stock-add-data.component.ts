@@ -15,7 +15,7 @@ export class StockAddDataComponent implements OnInit {
   public modalRef?: BsModalRef;
   public mainForm: FormGroup;
   public showAlert: boolean;
-  public showSuccess: boolean;
+  public alert: AlertType;
 
   constructor(private _formBuilder: FormBuilder, private _cd: ChangeDetectorRef, private _stockClient: StockClient, private _modalService: BsModalService) {
     const allowedExtensions = ['csv', 'xls'];
@@ -72,6 +72,13 @@ export class StockAddDataComponent implements OnInit {
       },
       error: (e: ErrorResponse) => {
         this.mainForm.enable();
+
+        if (e.error) {
+          this.alert = { type: 'warning', title: 'Validációs hiba!', description: e.error }
+        } else {
+          this.alert = { type: 'danger', title: 'Hiba történt!', description: 'Próbáld meg később újra elküldeni.' }
+        }
+
         me.showAlert = true;
         setTimeout(function () {
           me.showAlert = false;
@@ -109,13 +116,24 @@ export class StockAddDataComponent implements OnInit {
     var file = { data: this.mainForm.get('file')?.value, fileName: this.mainForm.get('file')?.value.name }
     this._stockClient.uploadStockData(file, this.mainForm.get('name')?.value).subscribe({
       complete: () => {
+        this.alert = {
+          type: 'success', title: 'Sikeres feltöltés!', description: 'Navigálj át a listázó oldalra az adatok megtekintéséhez.'
+        }
         this.mainForm.enable();
-        me.showSuccess = true;
+
+        me.showAlert = true;
+
         setTimeout(function () {
-          me.showSuccess = false;
+          me.showAlert = false;
         }, 3000);
       },
       error: (e: ErrorResponse) => {
+        if (e.error) {
+          this.alert = { type: 'warning', title: 'Validációs hiba!', description: e.error }
+        } else {
+          this.alert = { type: 'danger', title: 'Hiba történt!', description: 'Próbáld meg később újra elküldeni.' }
+        }
+
         this.mainForm.enable();
         me.showAlert = true;
         setTimeout(function () {
@@ -125,3 +143,5 @@ export class StockAddDataComponent implements OnInit {
     });
   }
 }
+
+export type AlertType = { type: 'danger' | 'success' | 'warning', title: string, description: string };
