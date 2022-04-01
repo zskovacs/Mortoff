@@ -1,6 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileValidator } from '../../shared/file.validator';
+import { ErrorResponse, StockClient } from '../mortoff-api';
+import { BsModalService, BsModalRef, ModalOptions } from 'ngx-bootstrap/modal';
+import { AlertModalContentComponent } from '../../shared/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-stock-add-data',
@@ -8,8 +11,9 @@ import { FileValidator } from '../../shared/file.validator';
   styleUrls: ['./stock-add-data.component.scss']
 })
 export class StockAddDataComponent implements OnInit {
+  @ViewChild('alertBox') alertBox: ElementRef;
 
-  constructor(private _formBuilder: FormBuilder, private cd: ChangeDetectorRef) {
+  constructor(private _formBuilder: FormBuilder, private cd: ChangeDetectorRef, private _stockClient: StockClient, private _modalService: BsModalService) {
 
     const allowedExtensions = ['csv', 'xls'];
 
@@ -19,14 +23,13 @@ export class StockAddDataComponent implements OnInit {
     });
   }
 
-  public get form(): { [key: string]: AbstractControl } {
-    return this.mainForm.controls;
-  }
 
+  modalRef?: BsModalRef;
   mainForm: FormGroup;
+  showAlert: boolean;
 
   ngOnInit(): void {
-
+    this.showAlert = false;
   }
 
   onFileChange($event: any) {
@@ -40,6 +43,51 @@ export class StockAddDataComponent implements OnInit {
 
   submit() {
 
+    this.mainForm.disable();
+    const me = this;
+
+    this._stockClient.checkStock(this.mainForm.get('name')?.value).subscribe({
+      next: (value: boolean) => {
+        if (value)
+          this.modalRef = this._modalService.show(this.alertBox as any);
+
+        this.save();
+      },      
+      error: (e: ErrorResponse) => {
+        this.mainForm.enable();
+        me.showAlert = true;
+        setTimeout(function () {
+          me.showAlert = false;
+        }, 3000);
+      }
+    });
   }
 
+  confirm(): void {
+    this.save();
+    this.modalRef?.hide();
+  }
+
+  decline(): void {
+    this.mainForm.enable();
+    this.modalRef?.hide();
+  }
+
+  private save(): void {
+    const me = this;
+
+    var file = { data: this.mainForm.get('file')?.value, fileName: this.mainForm.get('file')?.value.name }
+    this._stockClient.uploadStockData(file, this.mainForm.get('name')?.value).subscribe({
+      complete: () => {
+        this.mainForm.enable();
+      },
+      error: (e: ErrorResponse) => {
+        this.mainForm.enable();
+        me.showAlert = true;
+        setTimeout(function () {
+          me.showAlert = false;
+        }, 3000);
+      }
+    });
+  }
 }

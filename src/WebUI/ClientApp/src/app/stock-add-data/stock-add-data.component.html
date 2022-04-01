@@ -21,7 +21,9 @@
       <p class="lead text-muted">Kérjük, adja meg a részvény nevét, legfeljebb 40 karakterben (angol ABC kis- és nagybetűi, szóköz és számok használható), majd válassza ki azt a CSV állományt, amely a részvény árfolyamának változásait tartalmazza.</p>
       <p class="lead text-muted">A feltöltés gombra kattintva az adatok betöltődnek az adatbázisba.</p>
     </div>
-
+    <alert type="danger" *ngIf="showAlert">
+      <strong>Hiba történt</strong> Próbáld meg később újra elküldeni.
+    </alert>
     <div class="col-12">
       <form [formGroup]="mainForm" (ngSubmit)="submit()">
         <div class="form-group">
@@ -32,7 +34,7 @@
             <div *ngIf="mainForm.get('name')?.hasError('required')">Kötelező nevet megadni.</div>
             <div *ngIf="mainForm.get('name')?.hasError('maxlength')">A részvény neve maximum 40 karakter lehet.</div>
             <div *ngIf="mainForm.get('name')?.hasError('pattern')">A részvény neve csak az angol ABC kis és nagybetűit tartalmazhatja illetve szóközöket és számokat.</div>
-            
+
           </div>
 
           <small id="stockNameHelp" class="form-text text-muted">Pl: NIO</small>
@@ -45,9 +47,24 @@
             <div *ngIf="mainForm.get('file')?.hasError('fileMaxSize')">A maximális mérete a filenak 1 MB</div>
           </div>
           <small id="fileUploadHelp" class="form-text text-muted">A feltöltött állomány mérete 1MB-nál kisebb kell, hogy legyen!</small>
-        </div>        
+        </div>
         <button type="submit" class="btn btn-primary mt-3" [disabled]="mainForm.invalid">Feltöltés</button>
       </form>
     </div>
   </div>
 </section>
+
+<ng-template #alertBox>
+  <div class="modal-header alert-danger">
+    Létező részvény
+  </div>
+
+  <div class="modal-body text-center">
+    <p>Ez a részvény már létezik a rendszerben. Szeretnéd felülírni a meglévő adatokat?</p>
+    
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="decline()">Mégsem</button>
+    <button type="button" class="btn btn-danger" (click)="confirm()">Felülírás</button>
+  </div>
+</ng-template>
