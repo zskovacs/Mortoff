@@ -17,7 +17,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IStockClient {
     uploadStockData(file: FileParameter | null | undefined, stockName: string | null | undefined): Observable<string>;
-    getHistory(name: string | null, from: Date, to: Date): Observable<StockDataViewModel[]>;
+    getHistory(id: number, from: Date, to: Date): Observable<StockDataViewModel[]>;
     checkStock(name: string | null): Observable<boolean>;
     listStocks(): Observable<StockListViewModel[]>;
 }
@@ -96,12 +96,12 @@ export class StockClient implements IStockClient {
         return _observableOf(null as any);
     }
 
-    getHistory(name: string | null, from: Date, to: Date): Observable<StockDataViewModel[]> {
+    getHistory(id: number, from: Date, to: Date): Observable<StockDataViewModel[]> {
         let url_ = this.baseUrl + "/api/stock/get-stock-history?";
-        if (name === undefined)
-            throw new Error("The parameter 'name' must be defined.");
-        else if(name !== null)
-            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined and cannot be null.");
+        else
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (from === undefined || from === null)
             throw new Error("The parameter 'from' must be defined and cannot be null.");
         else
@@ -368,6 +368,7 @@ export interface IStockDataViewModel {
 }
 
 export class StockListViewModel implements IStockListViewModel {
+    id?: number;
     name?: string;
     from?: Date | undefined;
     to?: Date | undefined;
@@ -383,6 +384,7 @@ export class StockListViewModel implements IStockListViewModel {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.name = _data["name"];
             this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
             this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
@@ -398,6 +400,7 @@ export class StockListViewModel implements IStockListViewModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["name"] = this.name;
         data["from"] = this.from ? this.from.toISOString() : <any>undefined;
         data["to"] = this.to ? this.to.toISOString() : <any>undefined;
@@ -406,6 +409,7 @@ export class StockListViewModel implements IStockListViewModel {
 }
 
 export interface IStockListViewModel {
+    id?: number;
     name?: string;
     from?: Date | undefined;
     to?: Date | undefined;

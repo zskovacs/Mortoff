@@ -18,12 +18,14 @@ public class StockListQueryHandler : IRequestHandler<StockListQuery, List<StockL
         using var connection = _connectionFactory.GetOpenConnection();
 
         var sql = @"SELECT 
-	                s.[Name]
+                     s.[Id]
+	                ,s.[Name]
 	                ,MIN(d.[Date]) as [From]
 	                ,MAX(d.[Date]) as [To]
                   FROM [dbo].[Stocks] s
                   LEFT OUTER JOIN [dbo].[Datas] d ON s.Id = d.StockId
-                  GROUP BY s.[Name]";
+                  GROUP BY s.[Name], s.[Id]
+                  ORDER BY s.[Name] DESC";
 
         var result = await connection.QueryAsync<StockListViewModel>(sql);
 
