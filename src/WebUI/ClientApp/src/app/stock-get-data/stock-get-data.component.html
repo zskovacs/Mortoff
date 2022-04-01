@@ -23,27 +23,31 @@
     <div class="col-12" *ngIf="stocks.length > 0">
       <div class="form-group">
         <label for="datalist">Részvény megnevezése</label>
-        <select class="form-select" id="datalistOptions" (change)="onStockChange($event)">          
+        <select class="form-select" id="datalistOptions" (change)="onStockChange($event)">
           <option *ngFor="let stock of stocks" [value]="stock.id">{{stock.name}}</option>
         </select>
       </div>
     </div>
     <div class="col-12 mt-5" id="chart" *ngIf="selectedStock">
 
+
       <h1>{{selectedStock.name}}</h1>
-      <p>
-        Az alábbi diagrammon tekinthetőek meg a részvény árfolyamának változásai <br />
-        A diagramm alatti gombok segítségével választhatő ki a megjelenítendő időszak
-      </p>
+      <div *ngIf="stockData.length == 0">Nincs megjeleníthető adat</div>
+      <div *ngIf="stockData.length > 0">
+        <p>
+          Az alábbi diagrammon tekinthetőek meg a részvény árfolyamának változásai <br />
+          A diagramm alatti gombok segítségével választhatő ki a megjelenítendő időszak
+        </p>
 
+        <apx-chart [series]="chartOptions.series"
+                   [chart]="chartOptions.chart"
+                   [xaxis]="chartOptions.xaxis"
+                   [yaxis]="chartOptions.yaxis"
+                   [tooltip]="chartOptions.tooltip"></apx-chart>
 
-      <apx-chart [series]="chartOptions.series"
-                 [chart]="chartOptions.chart"
-                 [xaxis]="chartOptions.xaxis"
-                 [yaxis]="chartOptions.yaxis"
-                 [tooltip]="chartOptions.tooltip"></apx-chart>
+        <button *ngFor="let range of dateRanges" type="button" class="btn  m-2" [ngClass]="range.selected == false ? 'btn-primary' : 'btn-danger'" (click)="selectDate(range)">{{ range.from | date}} - {{ range.to | date}}</button>
 
-      <button *ngFor="let range of dateRanges" type="button" class="btn  m-2" [ngClass]="range.selected == false ? 'btn-primary' : 'btn-danger'" (click)="selectDate(range)" >{{ range.from | date}} - {{ range.to | date}}</button>
+      </div>
     </div>
   </div>
 </section>

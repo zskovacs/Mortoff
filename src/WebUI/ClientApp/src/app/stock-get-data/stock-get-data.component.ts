@@ -25,7 +25,7 @@ export class StockGetDataComponent implements OnInit {
   public dateRanges: DateRanges[] = [];
 
   constructor(private _stockClient: StockClient) {
-    
+
   }
 
   ngOnInit(): void {
@@ -41,7 +41,7 @@ export class StockGetDataComponent implements OnInit {
     });
   }
 
-  public onStockChange($event: any): void {    
+  public onStockChange($event: any): void {
     this.selectedStock = this.stocks.filter(x => x.id == $event.target.value)[0];
 
     this.initData();
@@ -49,15 +49,21 @@ export class StockGetDataComponent implements OnInit {
 
   private populateDateRanges(): void {
     this.dateRanges.length = 0;
-    var first = moment(this.selectedStock.from);    
+    var first = moment(this.selectedStock.from);
     var last = moment(this.selectedStock.to);
 
     while (first.isBefore(last)) {
       this.dateRanges.push({ from: first.toDate(), to: first.add(3, "months").toDate(), selected: false })
     }
 
-    if (this.dateRanges[0])
+    let cachedDate = JSON.parse(localStorage.getItem(this.selectedStock.id.toString()));
+    if (cachedDate) {
+      var c = this.dateRanges.find(x => moment(x.from).isSame(cachedDate.from, "day"))
+      if (c)
+        c.selected = true;
+    } else if (this.dateRanges[0]) {
       this.dateRanges[0].selected = true;
+    }
   }
 
   public selectDate(dateRange: DateRanges): void {
@@ -71,12 +77,22 @@ export class StockGetDataComponent implements OnInit {
     if (_new) {
       _new.selected = true;
       this.loadHistory(_new.from, _new.to);
-    }    
+    }
+
+    localStorage.setItem(this.selectedStock.id.toString(), JSON.stringify(dateRange));
   }
 
   private initData(): void {
-    const from: Date = this.selectedStock.from as Date;
-    const to: Date = moment(this.selectedStock.from).add(3, "months").toDate();
+    let cachedDate = JSON.parse(localStorage.getItem(this.selectedStock.id.toString()));
+
+    let from: Date = this.selectedStock.from as Date;
+    let to: Date = moment(this.selectedStock.from).add(3, "months").toDate();
+
+    if (cachedDate) {
+      from = moment(cachedDate.from).toDate();
+      to = moment(cachedDate.to).toDate();
+    }
+
     this.populateDateRanges();
     this.loadHistory(from, to);
   }
