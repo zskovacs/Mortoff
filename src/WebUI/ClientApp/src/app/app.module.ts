@@ -13,6 +13,9 @@ import { API_BASE_URL } from './mortoff-api';
 import { ServiceProxyModule } from './mortoff-api.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AlertModalContentComponent } from '../shared/alert-modal/alert-modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [   
@@ -24,13 +27,16 @@ import { AlertModalContentComponent } from '../shared/alert-modal/alert-modal.co
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
     ModalModule.forRoot(),
     AlertModule.forRoot(),
     HttpClientModule,
-    ServiceProxyModule
+    ServiceProxyModule,
+    NgApexchartsModule
   ],
   providers: [
     {

@@ -1,7 +1,49 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb bg-light p-3">
+<nav aria-label="breadcrumb" class="bg-light py-2">
+
+  <ol class="container breadcrumb">
     <li class="breadcrumb-item"><a [routerLink]="'/stocks'">Főoldal</a></li>
     <li class="breadcrumb-item active" aria-current="page">Részvény megtekintése</li>
   </ol>
 </nav>
-<p>stock-get-data works!</p>
+
+<section class="container">
+  <div class="row py-lg-5">
+
+    <div class="col">
+      <h1 class="fw-light">Részvény adatok megtekintése</h1>
+      <p class="lead text-muted">Ezen a felületen a részvény árfolyamának a változásait tudjuk megtekinteni</p>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="col-12 text-center" *ngIf="stocks.length == 0">
+      <h3 class="fw-light">Még nem található feltöltött részvény adat!</h3>
+    </div>
+
+    <div class="col-12" *ngIf="stocks.length > 0">
+      <div class="form-group">
+        <label for="datalist">Részvény megnevezése</label>
+        <select class="form-select" id="datalistOptions" (change)="onStockChange($event)">          
+          <option *ngFor="let stock of stocks" [value]="stock.id">{{stock.name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-12 mt-5" id="chart" *ngIf="selectedStock">
+
+      <h1>{{selectedStock.name}}</h1>
+      <p>
+        Az alábbi diagrammon tekinthetőek meg a részvény árfolyamának változásai <br />
+        A diagramm alatti gombok segítségével választhatő ki a megjelenítendő időszak
+      </p>
+
+
+      <apx-chart [series]="chartOptions.series"
+                 [chart]="chartOptions.chart"
+                 [xaxis]="chartOptions.xaxis"
+                 [yaxis]="chartOptions.yaxis"
+                 [tooltip]="chartOptions.tooltip"></apx-chart>
+
+      <button *ngFor="let range of dateRanges" type="button" class="btn  m-2" [ngClass]="range.selected == false ? 'btn-primary' : 'btn-danger'" (click)="selectDate(range)" >{{ range.from | date}} - {{ range.to | date}}</button>
+    </div>
+  </div>
+</section>
