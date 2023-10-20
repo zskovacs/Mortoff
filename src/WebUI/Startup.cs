@@ -36,8 +36,7 @@ public class Startup
             options =>
             {
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            })
-        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ValidationException>(includeInternalTypes: true));
+            });
 
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 

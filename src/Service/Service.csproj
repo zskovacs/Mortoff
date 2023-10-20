@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\common.props"></Import>
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<AssemblyName>Mortoff.Service</AssemblyName>
 		<RootNamespace>Mortoff.Service</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CsvHelper" Version="27.2.1" />
+		<PackageReference Include="CsvHelper" Version="30.0.1" />
 	</ItemGroup>
 
 </Project>

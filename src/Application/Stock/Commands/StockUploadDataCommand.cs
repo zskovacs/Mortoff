@@ -21,7 +21,7 @@ internal class UploadStockDataCommandHandler : IRequestHandler<StockUploadDataCo
         _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(StockUploadDataCommand request, CancellationToken cancellationToken)
+    public async Task Handle(StockUploadDataCommand request, CancellationToken cancellationToken)
     {
         var records = _csvParser.ParseFile(request.File);
 
@@ -37,8 +37,6 @@ internal class UploadStockDataCommandHandler : IRequestHandler<StockUploadDataCo
 
         _dbContext.Stocks.Update(stock);
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

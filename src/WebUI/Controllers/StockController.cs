@@ -16,8 +16,8 @@ public class StockController : BaseController
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UploadStockData([FromForm] StockUploadDataCommand request)
     {
-        var response = await Send(request);
-        return Ok(response);
+        await Send(request);
+        return Ok();
     }
 
     [HttpGet]
